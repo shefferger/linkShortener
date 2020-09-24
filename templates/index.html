@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>kek</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" href="data:;base64,=">
+</head>
+<body>
+    <script>
+        function copy() {
+          var copyText = document.getElementById("link_out");
+          copyText.select();
+          copyText.setSelectionRange(0, 99999);
+          document.execCommand("copy");
+          var tooltip = document.getElementById("myTooltip");
+          tooltip.innerHTML = "Copied: " + copyText.value;
+        }
+
+        function outFunc() {
+          var tooltip = document.getElementById("myTooltip");
+          tooltip.innerHTML = "Copy to clipboard";
+        }
+    </script>
+<form action="" method="post">
+    <p>
+	    <label for="link_in">Ссылка:</label>
+	    <input type="text" name="link_in" id="link_in" size="35">
+	</p>
+	<p>
+	    <input type="submit">
+	</p>
+</form>
+{% if link_out %}
+    <label for="link_out">Укороченная ссылка:</label>
+    <input type="text" name="link_out" readonly="true" id="link_out" size="15" value="{{ link_out }}">
+    <div class="tooltip">
+        <button onclick="copy()" onmouseout="outFunc()">
+        <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+        Copy
+        </button>
+    </div>
+{% endif %}
+</body>
+</html>
