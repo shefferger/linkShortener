@@ -49,7 +49,11 @@ def getLink(shortLink):
     with sqlite3.connect('linksData.db') as connect:
         cursor = connect.cursor()
         cursor.execute("""SELECT * FROM links WHERE shortlink=?""", (shortLink,))
-        link = cursor.fetchone()[1]
+        links = cursor.fetchone()
+        if links is not None:
+            link = links[1]
+        else:
+            link = 'unsupported.link'
         return link
 
 
@@ -65,8 +69,8 @@ def index():
 
 @app.route('/<link>', methods=['GET'])
 def chLink(link):
-    if link == 'favicon.ico':
-        return None
+    if link == 'favicon.ico' or link == 'unsupported.link':
+        return render_template('index.html')
     return redirect(getLink(hostName + '/' + link))
 
 
