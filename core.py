@@ -6,9 +6,9 @@ import sqlite3
 
 app = Flask(__name__, template_folder='templates')
 
+hostName = '127.0.0.1'  # YOUR HOSTNAME
 
-hostName = '192.168.1.30'
-last = '1'
+last = '1'  # DONT TOUCH
 
 
 def save():
@@ -62,9 +62,13 @@ def index():
     if request.method == 'GET':
         return render_template('index.html')
     if request.method == 'POST':
+        userType = request.form.get('userType')
         link = request.form.get('link_in')
         link_out = generateNewLink(link)
-        return render_template('index.html', link_out=link_out)
+        if userType != 'telegramBot':
+            return render_template('index.html', link_out=link_out)
+        else:
+            return link_out
 
 
 @app.route('/<link>', methods=['GET'])
@@ -81,4 +85,4 @@ if __name__ == '__main__':
             last = pickle.load(file)
     else:
         save()
-    app.run(host=hostName, port='80', debug=False, )
+    app.run(host=hostName, port='80', debug=False)
