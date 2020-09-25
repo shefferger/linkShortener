@@ -28,10 +28,10 @@ def prepareSql():
 
 def generateNewLink(link):
     global last
+    last = iterator60.goNext(last)
     if not ('http://' in link or 'https://' in link):
         link = 'http://' + link
     link_out = hostName + '/' + last
-    last = iterator60.goNext(last)
     save()
     updateData(link, link_out)
     return link_out
@@ -81,4 +81,4 @@ if __name__ == '__main__':
             last = pickle.load(file)
     else:
         save()
-    app.run(host=hostName, port='80', debug=False)
+    app.run(host=hostName, port='80', debug=False, )
