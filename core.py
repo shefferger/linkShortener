@@ -32,6 +32,8 @@ def generateNewLink(link):
     if not ('http://' in link or 'https://' in link):
         link = 'http://' + link
     link_out = hostName + '/' + last
+    if last in link and hostName in link:
+        link_out = hostName
     save()
     updateData(link, link_out)
     return link_out
