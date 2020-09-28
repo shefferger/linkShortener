@@ -108,7 +108,7 @@ def index():
         link_out = generateNewLink(link)
         if request.form.get('set_pwd'):
             setPwd(link_out, request.form.get('pwd_in'))
-        if userType != 'telegramBot':
+        if userType not in ('telegramBot', 'vkBot'):
             return render_template('index.html', link_out=link_out)
         else:
             return link_out
