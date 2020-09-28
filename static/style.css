@@ -35,3 +35,8 @@
   visibility: visible;
   opacity: 1;
 }
+
+#pwdField{
+  padding: 6px 8px;
+  display: none;
+}

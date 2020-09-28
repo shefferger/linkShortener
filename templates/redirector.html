@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirector</title>
+    <link rel="icon" href="data:;base64,=">
+</head>
+<body>
+<script>
+    let pwd = prompt('Введите пароль');
+    let currentLink = window.location.href;
+    if (pwd != '') {
+        window.location.href = currentLink + '/' + pwd;
+    } else {
+        window.location.href = currentLink;
+    }
+</script>
+</body>
+</html>

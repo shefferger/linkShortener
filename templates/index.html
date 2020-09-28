@@ -8,40 +8,44 @@
     <link rel="icon" href="data:;base64,=">
 </head>
 <body>
-    <script>
-        function copy() {
-          var copyText = document.getElementById("link_out");
-          copyText.select();
-          copyText.setSelectionRange(0, 99999);
-          document.execCommand("copy");
-          var tooltip = document.getElementById("myTooltip");
-          tooltip.innerHTML = "Copied: " + copyText.value;
-        }
-
-        function outFunc() {
-          var tooltip = document.getElementById("myTooltip");
-          tooltip.innerHTML = "Copy to clipboard";
-        }
-    </script>
-<form action="" method="post">
-    <p>
-	    <label for="link_in">Ссылка:</label>
-	    <input type="text" name="link_in" id="link_in" size="35">
-        <input type="hidden" value="browser">
-	</p>
-	<p>
-	    <input type="submit">
-	</p>
-</form>
-{% if link_out %}
-    <label for="link_out">Укороченная ссылка:</label>
-    <input type="text" name="link_out" readonly="true" id="link_out" size="15" value="{{ link_out }}">
-    <div class="tooltip">
-        <button onclick="copy()" onmouseout="outFunc()">
-        <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
-        Copy
-        </button>
-    </div>
-{% endif %}
+    <script src="static/script.js"></script>
+    <form action="" method="post">
+        <p>
+            <script>
+                function togglePwd() {
+                    var checkBox = document.getElementById("set_pwd");
+                    var text = document.getElementById("pwdField");
+                    if (checkBox.checked == true){
+                        text.style.display = "block";
+                    } else {
+                        text.style.display = "none";
+                    }
+                }
+            </script>
+            <label for="link_in">Ссылка:</label>
+            <input type="text" name="link_in" id="link_in" size="35">
+            <input type="hidden" value="browser">
+            <br><br>
+            <label for="set_pwd">Установить пароль</label>
+            <input id="set_pwd" name="set_pwd" type="checkbox" onclick="togglePwd()">
+            <div id="pwdField" style="display:none">
+                <label for="pwd_in">Пароль:</label>
+                <input type="text" name="pwd_in" id="pwd_in" size="35">
+            </div>
+        </p>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+    {% if link_out %}
+        <label for="link_out">Укороченная ссылка:</label>
+        <input type="text" name="link_out" readonly="true" id="link_out" size="15" value="{{ link_out }}">
+        <div class="tooltip">
+            <button onclick="copy()" onmouseout="outFunc()">
+            <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+            Copy
+            </button>
+        </div>
+    {% endif %}
 </body>
 </html>
