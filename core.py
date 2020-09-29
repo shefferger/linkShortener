@@ -3,11 +3,13 @@ import iterator60
 import pickle
 import os
 import sqlite3
+import cfg
+import s_logger as log
 
 app = Flask(__name__, template_folder='templates')
 
-hostName = '127.0.0.1'  # YOUR HOSTNAME
-
+hostName = cfg.hostName  # YOUR HOSTNAME
+log.noPrint = True
 last = '1'  # DONT TOUCH
 
 
@@ -28,6 +30,7 @@ def prepareSql():
                        (shortlink TEXT NOT NULL PRIMARY KEY, pwd TEXT NOT NULL)
                        WITHOUT ROWID""")
         connect.commit()
+        log.log('SQL Prepared stage done')
 
 
 def generateNewLink(link):
@@ -96,8 +99,17 @@ def validatePwd(link, pwd):
         return False
 
 
+@app.after_request
+def log_the_status_code(response):
+    if type(response) is not None:
+        status = response.status
+        log.log(str(status) + '\n')
+    return response
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    log.log(str(request.method) + ' /' + '\n')
     if request.method == 'GET':
         return render_template('index.html')
     if request.method == 'POST':
@@ -106,8 +118,10 @@ def index():
         if link == '':
             return render_template('index.html')
         link_out = generateNewLink(link)
+        log.log(str(userType) + ' created new link\n' + str(link) + '\n' + str(link_out) + '\n')
         if request.form.get('set_pwd'):
-            setPwd(link_out, request.form.get('pwd_in'))
+            pwd = request.form.get('pwd_in')
+            setPwd(link_out, pwd)
         if userType not in ('telegramBot', 'vkBot'):
             return render_template('index.html', link_out=link_out)
         else:
@@ -116,6 +130,7 @@ def index():
 
 @app.route('/<link>', methods=['GET'], strict_slashes=False)
 def chLink(link):
+    log.log(str(request.method) + ' /' + link + '\n')
     if link == 'favicon.ico' or link == 'unsupported.link':
         return redirect('http://' + hostName)
     link = hostName + '/' + link
@@ -127,6 +142,7 @@ def chLink(link):
 
 @app.route('/<link>/<pwd>', methods=['GET'], strict_slashes=False)
 def verifyPwd(link, pwd):
+    log.log(str(request.method) + ' /' + link + '/' + pwd + '\n')
     link = hostName + '/' + link
     if checkPwd(link):
         if validatePwd(link, pwd):
@@ -149,4 +165,5 @@ if __name__ == '__main__':
             last = pickle.load(file)
     else:
         save()
+    log.log('\n' + 28 * '_' + '\nStarting the core of linkcut\n' + 28 * '_' + '\n')
     app.run(host=hostName, port='80', debug=False)
