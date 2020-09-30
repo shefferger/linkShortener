@@ -9,7 +9,7 @@
 <script>
     let pwd = prompt('Введите пароль');
     let currentLink = window.location.href;
-    if (pwd != '') {
+    if ((pwd != '') && (pwd.length <= 35)){
         window.location.href = currentLink + '/' + pwd;
     } else {
         window.location.href = currentLink;

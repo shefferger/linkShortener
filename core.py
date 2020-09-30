@@ -153,11 +153,6 @@ def verifyPwd(link, pwd):
         return 'hello'
 
 
-@app.route('/<a>/<b>/<c>', methods=['GET'], strict_slashes=False)
-def terminator():
-    return redirect('http://' + hostName)
-
-
 if __name__ == '__main__':
     prepareSql()
     if os.path.exists('iter.pkl'):
@@ -165,5 +160,5 @@ if __name__ == '__main__':
             last = pickle.load(file)
     else:
         save()
-    log.log('\n' + 28 * '_' + '\nStarting the core of linkcut\n' + 28 * '_' + '\n')
+    log.log('\n' + 28 * '_' + '\nStarting the core of linkcut web app\n' + 28 * '_' + '\n')
     app.run(host=hostName, port='80', debug=False)
