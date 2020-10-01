@@ -102,14 +102,15 @@ def validatePwd(link, pwd):
 @app.after_request
 def log_the_status_code(response):
     if type(response) is not None:
+        #print(request.remote_addr)
         status = response.status
-        log.log(str(status) + '\n')
+        log.log(request.remote_addr + ' <- RESPONSE ' + str(status) + '\n')
     return response
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    log.log(request.remote_addr + ' -> ' + str(request.method) + ' /' + '\n')
+    log.log(request.remote_addr + ' -> REQUEST ' + str(request.method) + ' /' + '\n')
     if request.method == 'GET':
         return render_template('index.html')
     if request.method == 'POST':
@@ -118,7 +119,7 @@ def index():
         if link == '':
             return render_template('index.html')
         link_out = generateNewLink(link)
-        log.log(request.remote_addr + ' -> ' + str(userType) + ' created new link\n' + str(link) + '\n' + str(link_out) + '\n')
+        log.log(request.remote_addr + ' -> REQUEST ' + str(userType) + ' created new link\n\t\t\t\t' + str(link) + '\n\t\t\t\t' + str(link_out) + '\n')
         if request.form.get('set_pwd'):
             pwd = request.form.get('pwd_in')
             setPwd(link_out, pwd)
@@ -130,7 +131,7 @@ def index():
 
 @app.route('/<link>', methods=['GET'], strict_slashes=False)
 def chLink(link):
-    log.log(request.remote_addr + ' -> ' + str(request.method) + ' /' + link + '\n')
+    log.log(request.remote_addr + ' -> REQUEST ' + str(request.method) + ' /' + link + '\n')
     if link == 'favicon.ico' or link == 'unsupported.link':
         return redirect('http://' + hostName)
     link = hostName + '/' + link
@@ -142,7 +143,7 @@ def chLink(link):
 
 @app.route('/<link>/<pwd>', methods=['GET'], strict_slashes=False)
 def verifyPwd(link, pwd):
-    log.log(request.remote_addr + ' -> ' + str(request.method) + ' /' + link + '/' + pwd + '\n')
+    log.log(request.remote_addr + ' -> REQUEST ' + str(request.method) + ' /' + link + '/' + pwd + '\n')
     link = hostName + '/' + link
     if checkPwd(link):
         if validatePwd(link, pwd):
